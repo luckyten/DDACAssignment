@@ -1,0 +1,57 @@
+﻿@model DDACAssignment.Models.SearchViewModel
+
+@{
+    var Flights = Model.Flights;
+}
+
+<table id="FlightTable" class="table" style="margin-top:20px;">
+    <tr>
+        <th>
+            Origin
+        </th>
+        <th>
+            Destination
+        </th>
+        <th>
+            Aircraft
+        </th>
+        <th>
+            Departure Time
+        </th>
+        <th>
+            Arrival Time
+        </th>
+        <th>
+            Ticket Price (Per)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Flights)
+    {
+        <tr>
+            <td>
+                @item.Origin.City - @item.Origin.Country
+            </td>
+            <td>
+                @item.Destination.City - @item.Destination.Country
+            </td>
+            <td>
+                @item.AircraftId
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Departure)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Arrival)
+            </td>
+            <td>
+                @string.Format("RM{0}", item.Price.ToString("0.00"))
+            </td>
+            <td>
+                @Html.ActionLink("Book", "Details", new { id = item.FlightId })
+            </td>
+        </tr>
+    }
+
+</table>

@@ -1,0 +1,29 @@
+﻿@model DDACAssignment.Models.IndexViewModel
+@{
+    ViewBag.Title = "Profile";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p class="text-success">@ViewBag.StatusMessage</p>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>Password:</dt>
+        <dd>
+            @Html.ActionLink("Change your password", "ChangePassword")
+        </dd>
+    </dl>
+    <dl class="dl-horizontal">
+        <dt>Profile:</dt>
+        <dd>
+            @Html.ActionLink("Change your profile information", "ChangeProfile")
+        </dd>
+    </dl>
+    <dl class="dl-horizontal">
+        <dt>Flight Booking:</dt>
+        <dd>
+            @Html.ActionLink("View your flight bookings", "Bookings")
+        </dd>
+    </dl>
+</div>

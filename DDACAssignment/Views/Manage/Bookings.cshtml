@@ -1,0 +1,65 @@
+﻿@model IEnumerable<DDACAssignment.Models.Booking>
+
+@{
+    ViewBag.Title = "Bookings";
+}
+
+<h2>Bookings</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            Origin
+        </th>
+        <th>
+            Destination
+        </th>
+        <th>
+            Aircraft
+        </th>
+        <th>
+            Departure Time
+        </th>
+        <th>
+            Arrival Time
+        </th>
+        <th>
+            Seats
+        </th>
+        <th>
+            Total Price
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @item.Flight.Origin.City - @item.Flight.Origin.Country
+        </td>
+        <td>
+            @item.Flight.Destination.City - @item.Flight.Destination.Country
+        </td>
+        <td>
+            @item.Flight.AircraftId
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Flight.Departure)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Flight.Arrival)
+        </td>
+        <td>
+            @foreach(var seat in item.Seats)
+            {
+                <span>
+                    @seat.Row
+                    _@seat.Col,
+                </span>
+            }
+        </td>
+        <td>
+            RM@(item.Seats.Count * item.Flight.Price)
+        </td>
+    </tr>
+}
+</table>

@@ -1,0 +1,124 @@
+﻿@model DDACAssignment.Models.BookingViewModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<script src="@Url.Content("~/Scripts/jquery.seat-charts.js")"></script>
+<link href="@Url.Content("~/Content/jquery.seat-charts.css")" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var sc = $('#seat-map').seatCharts({
+            map: [
+                'aaa_aaa',
+                'aaa_aaa',
+                'aaa_aaa',
+                'aaa_aaa',
+                'aaa_aaa',
+                'aaa_aaa',
+                'aaa_aaa',
+                'aaa_aaa',
+            ],
+            seats: {
+                a: {
+                    price: @Model.Flight.Price,
+                    classes: 'front-seat' //your custom CSS class
+                }
+
+            },
+            click: function () {
+                if (this.status() == 'available') {
+                    $('#seatList').val($('#seatList').val() + this.settings.id + ',');
+                    $('#totalPrice').text('Total: RM' + (recalculateTotal(sc) + this.data().price));
+                    return 'selected';
+                } else if (this.status() == 'selected') {
+                    $('#seatList').val($('#seatList').val().replace((this.settings.id + ','), ''));
+                    $('#totalPrice').text('Total: RM' + (recalculateTotal(sc) - this.data().price));
+                    return 'available';
+                } else if (this.status() == 'unavailable') {
+                    //seat has been already booked
+                    return 'unavailable';
+                } else {
+                    return this.style();
+                }
+            }
+        });
+
+        sc.get([@Html.Raw(Model.BoookedSeats)]).status('unavailable');
+    });
+
+    function recalculateTotal(sc) {
+        var total = 0;
+
+        //basically find every selected seat and sum its price
+        sc.find('selected').each(function () {
+            total += this.data().price;
+        });
+        return total;
+    }    function redirect() {
+        window.location.href = '/Flights/Search';
+    }
+</script>
+
+<h2>Flight Booking - @Model.Flight.AircraftId</h2>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        From
+        <h3>
+            @Model.Flight.Origin.City (@Model.Flight.Origin.Code)
+        </h3>
+        <h5>
+            @Model.Flight.Origin.Country
+        </h5>
+        <h4 style="padding-top:20px;">
+            @Model.Flight.Departure.ToString("dd/MM/yyyy hh:mmtt")
+        </h4>
+    </div>
+    <div class="col-md-4">
+        To
+        <h3>
+            @Model.Flight.Destination.City (@Model.Flight.Destination.Code)
+        </h3>
+        <h5>
+            @Model.Flight.Destination.Country
+        </h5>
+        <h4 style="padding-top:20px;">
+            @Model.Flight.Arrival.ToString("dd/MM/yyyy hh:mmtt")
+        </h4>
+    </div>
+</div>
+
+<hr />
+
+
+<h4>Seat Selection</h4>
+<div class="row" style="padding-top:20px;">
+    <div class="col-md-2"></div>
+    <div id="seat-map" class="col-md-4"></div>
+    <div class="col-md-2"></div> 
+
+    @using (Ajax.BeginForm("Book", "Flights", new AjaxOptions
+    {
+    HttpMethod = "POST",
+    OnSuccess = "redirect"
+    }))
+    {
+    <div class="col-md-4 well">
+        Seat Number
+        <input name="flightId" value="@Model.Flight.FlightId" hidden />
+        <input id="seatList" name="seatList" type="text" class="form-control" readonly>
+
+        <div id="totalPrice" style="padding-top:20px;">
+            Total : RM0
+        </div>
+
+        <div style="padding-top:20px;">
+            <input id="searchBtn" type="submit" class="btn btn-primary" value="Book Seats" />
+        </div>
+    </div>
+    }
+    
+</div>

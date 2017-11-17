@@ -1,0 +1,76 @@
+﻿@model DDACAssignment.Models.SearchViewModel
+
+@{
+    ViewBag.Title = "Search";
+}
+
+<h2>Search Flights</h2>
+
+@using (Ajax.BeginForm("Search", "Flights", new AjaxOptions
+{
+    HttpMethod = "POST",
+    InsertionMode = InsertionMode.Replace,
+    UpdateTargetId = "FlightTable"
+}))
+{
+    <script type="text/javascript">
+        $(function () {
+            $('#datetimepicker').datepicker({
+                dateFormat: "dd/mm/yy",
+                minDate: 0,
+                onSelect: function (selected) {
+                    var date = $(this).datepicker("getDate"); //Get the Date object with actual date
+                    date.setDate(date.getDate() + 1);
+                    $("#datetimepicker2").datepicker("option", "minDate", date);
+                }
+            }).datepicker('setDate', new Date());
+
+            $('#datetimepicker2').datepicker({
+                dateFormat: "dd/mm/yy",
+                minDate: 1
+            }).datepicker('setDate', new Date());
+        });
+    </script>
+
+
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-2">
+                From
+                @Html.DropDownList("origin", Model.Airports.Select(p => new SelectListItem { Value = p.Code, Text = p.City + " - " + p.Country }), new { @class = "form-control" })
+            </div>
+
+            <div class="col-md-2">
+                To
+                @Html.DropDownList("destination", Model.Airports.Select(p => new SelectListItem { Value = p.Code, Text = p.City + " - " + p.Country}), new { @class = "form-control" })
+            </div>
+
+            <div class="col-md-2">
+                Departure Date:
+                <div class="input-group date">
+                    <input name="departureDate" type="text" class="form-control" id="datetimepicker" >
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                Return Date:
+                <div class="input-group date">
+                    <input name="arrivalDate" type="text" class="form-control" id="datetimepicker2" placeholder="One-Way">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <input id="searchBtn" type="submit" class="btn btn-primary" value="Search" style="margin-top:20px;"/>
+            </div>
+        </div>
+    </div>
+}
+
+<hr />
+<div class="container" style="padding-top:20px;">
+    <div class="row">
+        <div id="TicketTable">
+            @{Html.RenderPartial("_Search", Model); }
+        </div>
+    </div>
+</div>
