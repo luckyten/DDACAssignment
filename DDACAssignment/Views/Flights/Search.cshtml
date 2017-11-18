@@ -17,17 +17,7 @@
         $(function () {
             $('#datetimepicker').datepicker({
                 dateFormat: "dd/mm/yy",
-                minDate: 0,
-                onSelect: function (selected) {
-                    var date = $(this).datepicker("getDate"); //Get the Date object with actual date
-                    date.setDate(date.getDate() + 1);
-                    $("#datetimepicker2").datepicker("option", "minDate", date);
-                }
-            }).datepicker('setDate', new Date());
-
-            $('#datetimepicker2').datepicker({
-                dateFormat: "dd/mm/yy",
-                minDate: 1
+                minDate: 0
             }).datepicker('setDate', new Date());
         });
     </script>
