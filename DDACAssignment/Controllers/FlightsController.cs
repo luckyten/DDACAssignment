@@ -30,14 +30,13 @@ namespace DDACAssignment.Controllers
         }
 
         [HttpPost]
-        public ActionResult Search(string origin, string destination, string departureDate, string arrivalDate)
+        public ActionResult Search(string origin, string destination, string departureDate)
         {
             SearchViewModel model = new SearchViewModel();
 
             DateTime departure = DateTime.ParseExact(departureDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-            DateTime arrival = DateTime.ParseExact(arrivalDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
 
-            List<Flight> flights = db.Flights.Include("Origin").Include("Destination").Where(x => x.Origin.Code == origin && x.Destination.Code == destination && DbFunctions.DiffDays(x.Departure, departure) == 0 && DbFunctions.DiffDays(x.Arrival, arrival) == 0).ToList();
+            List<Flight> flights = db.Flights.Include("Origin").Include("Destination").Where(x => x.Origin.Code == origin && x.Destination.Code == destination && DbFunctions.DiffDays(x.Departure, departure) == 0).ToList();
             model.Flights = flights;
             model.Airports= db.Airports.ToList();
 
