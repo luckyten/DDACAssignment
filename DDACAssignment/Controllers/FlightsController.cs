@@ -24,7 +24,7 @@ namespace DDACAssignment.Controllers
             SearchViewModel model = new SearchViewModel();
             List<Flight> flights = new List<Flight>();
             model.Flights = flights;
-            model.Airports = db.Airports.ToList();
+            model.Airports = db.Airports.OrderBy(x => x.City).ToList();
 
             return View(model);
         }
@@ -38,7 +38,7 @@ namespace DDACAssignment.Controllers
 
             List<Flight> flights = db.Flights.Include("Origin").Include("Destination").Where(x => x.Origin.Code == origin && x.Destination.Code == destination && DbFunctions.DiffDays(x.Departure, departure) == 0).ToList();
             model.Flights = flights;
-            model.Airports= db.Airports.ToList();
+            model.Airports = db.Airports.OrderBy(x => x.City).ToList();
 
             return PartialView("_Search", model);
         }
